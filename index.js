@@ -1,3 +1,39 @@
+let modeIndex = 0;
+
+function normal (){
+    return 'lightgreen';
+}
+
+function rainbow(){
+    const modeStyle = context.createLinearGradient(0, 0, canvas.height, canvas.width, );
+
+    for (let i = 0; i < randomColors.length; i++){
+        let offset = i/randomColors.length
+        modeStyle.addColorStop(offset, randomColors[i]);
+    } 
+
+    return modeStyle;
+}
+
+const MODES = [
+    normal,
+    rainbow
+]
+
+function changeMode(){
+    if(modeIndex + 1 < MODES.length){
+        modeIndex++
+    }else{
+        modeIndex = 0
+    }
+}
+
+window.addEventListener('keydown', event =>{
+    if(event.key == 'm') {
+        changeMode()
+    }
+})
+
 const canvas = document.getElementById('Matrix');
 const context = canvas.getContext('2d');
 
@@ -12,7 +48,7 @@ const simbols = '!@#$%¨&*()_+=§¬¢£³²¹ªº{}[]<>.,:;/°?';
 
 const alphabet = katakana;
 
-const fontSize = 48;
+const fontSize = 24;
 const columns = canvas.width / fontSize;
 
 const rainDrops = [];
@@ -21,26 +57,28 @@ for (let x = 0; x < columns; x++) {
     rainDrops[x] = 1;
 }
 
+const randomColors = [ 
+    'rgba(255, 0, 0, 1)', 
+    'rgba(255, 154, 0, 1)', 
+    'rgba(208, 222, 33, 1)', 
+    'rgba(79, 220, 74, 1)', 
+    'rgba(63, 218, 216, 1)', 
+    'rgba(47, 201, 226, 1)', 
+    'rgba(28, 127, 238, 1)', 
+    'rgba(95, 21, 242, 1)', 
+    'rgba(186, 12, 248, 1)',
+    'rgba(251, 7, 217, 1)',
+    'rgba(255, 0, 0, 1)'
+];
+
 const draw = () => {
-    context.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    context.fillStyle = "rgb(0, 0, 0, 0.05)"
     context.fillRect(0, 0, canvas.width, canvas.height);
 
-    context.fillStyle = 'lightgreen';
     context.font = fontSize + 'px Verdana ';
 
-    let color = 0;
-
     for (let i = 0; i < rainDrops.length; i++) {
-
-        // if (color > 10) {
-        //     color = 0
-        // }
-
-        // const randomColors = ['orange', 'red', 'yellow', 'lightgreen', 'green', 'skyblue', 'blue', 'violet', 'purple'];
-
-        // context.fillStyle = randomColors[color];
-        // color = color + 1
-        // console.log(color);
+        context.fillStyle = MODES[modeIndex]();
 
         const text = alphabet.charAt(Math.floor(Math.random()*alphabet.length));
         context.fillText(text, i * fontSize, rainDrops[i] * fontSize);
